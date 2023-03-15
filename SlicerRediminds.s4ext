@@ -7,7 +7,7 @@
 # This is source code manager (i.e. svn)
 scm git
 scmurl https://github.com/Rediminds/SlicerRediminds.git
-scmrevision master
+scmrevision main
 
 # list dependencies
 # - These should be names of other modules that have .s4ext files
@@ -38,7 +38,7 @@ status
 description This extension enables the user to load original CT scans and segmented files into Slicer using a URL, and then use the Segment Editor module to label or polish the segments of an organ. The Rediminds module, installed from the marketplace, can be used to send the segmented files to the Rediminds backend for further processing.
 
 # Space separated list of urls
-screenshoturls https://raw.githubusercontent.com/Rediminds/SlicerRediminds/master/Screenshots/Screenshot_1.png https://raw.githubusercontent.com/Rediminds/SlicerRediminds/master/Screenshots/Screenshot_2.png https://raw.githubusercontent.com/Rediminds/SlicerRediminds/master/Screenshots/Screenshot_3.png https://raw.githubusercontent.com/Rediminds/SlicerRediminds/master/Screenshots/Screenshot_4.png https://raw.githubusercontent.com/Rediminds/SlicerRediminds/master/Screenshots/Screenshot_5.png https://raw.githubusercontent.com/Rediminds/SlicerRediminds/master/Screenshots/Screenshot_6.png https://raw.githubusercontent.com/Rediminds/SlicerRediminds/master/Screenshots/Screenshot_7.png https://raw.githubusercontent.com/Rediminds/SlicerRediminds/master/Screenshots/Screenshot_8.png https://raw.githubusercontent.com/Rediminds/SlicerRediminds/master/Screenshots/Screenshot_9.png
+screenshoturls https://raw.githubusercontent.com/Rediminds/SlicerRediminds/main/Screenshots/Screenshot_1.png https://raw.githubusercontent.com/Rediminds/SlicerRediminds/main/Screenshots/Screenshot_2.png https://raw.githubusercontent.com/Rediminds/SlicerRediminds/main/Screenshots/Screenshot_3.png https://raw.githubusercontent.com/Rediminds/SlicerRediminds/main/Screenshots/Screenshot_4.png https://raw.githubusercontent.com/Rediminds/SlicerRediminds/main/Screenshots/Screenshot_5.png https://raw.githubusercontent.com/Rediminds/SlicerRediminds/main/Screenshots/Screenshot_6.png https://raw.githubusercontent.com/Rediminds/SlicerRediminds/main/Screenshots/Screenshot_7.png https://raw.githubusercontent.com/Rediminds/SlicerRediminds/main/Screenshots/Screenshot_8.png https://raw.githubusercontent.com/Rediminds/SlicerRediminds/main/Screenshots/Screenshot_9.png
 
 # 0 or 1: Define if the extension should be enabled after its installation.
 enabled 1
