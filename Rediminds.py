@@ -30,14 +30,15 @@ class Rediminds(ScriptedLoadableModule):
         # TODO: add here list of module names that this module requires
         self.parent.dependencies = []
         # TODO: replace with "Firstname Lastname (Organization)"
-        self.parent.contributors = ["K Mordhwaj (Inzint)"]
+        self.parent.contributors = [
+            "K Mordhwaj (Inzint)", "Andras Lasso (PerkLab)", "ASH"]
         # TODO: update with short description of the module and a link to online module documentation
         self.parent.helpText = """
 This is a scripted loadable module bundled in Rediminds extension.The purpose of this module is to process the various images and segmentations and send back to the backend server.
 """
         # TODO: replace with organization, grant and thanks
         self.parent.acknowledgementText = """
-This file was originally developed by K Mordhwaj, Inzint on behalf of Rediminds.
+This file was developed by K Mordhwaj, Inzint on behalf of Rediminds. In first part, taken reference from LoadRemote.py file of SlicerSandbox
 """
 
         # Additional initialization step after application startup is complete

@@ -38,4 +38,8 @@ Here are some screenshots to help you understand the usage of SlicerRediminds:
 
 If you encounter any issues while using SlicerRediminds, please contact the Rediminds support team at <a href="mailto:slicer-support@rediminds.com">slicer-support@rediminds.com</a>.
 
+## Credits
+
+A part of this Slicer extension was built with the help of code from [SlicerSandbox](https://github.com/PerkLab/SlicerSandbox/blob/master/LoadRemoteFile/LoadRemoteFile.py). We thank the original authors for their contributions.
+
 Thank you for using SlicerRediminds!
