@@ -17,13 +17,21 @@ To use SlicerRediminds, follow these steps:
 Here are some screenshots to help you understand the usage of SlicerRediminds:
 
 ![Screenshot 1](/Screenshots/Screenshot_1.png)
+
 ![Screenshot 2](/Screenshots/Screenshot_2.png)
+
 ![Screenshot 3](/Screenshots/Screenshot_3.png)
+
 ![Screenshot 4](/Screenshots/Screenshot_4.png)
+
 ![Screenshot 5](/Screenshots/Screenshot_5.png)
+
 ![Screenshot 6](/Screenshots/Screenshot_6.png)
+
 ![Screenshot 7](/Screenshots/Screenshot_7.png)
+
 ![Screenshot 8](/Screenshots/Screenshot_8.png)
+
 ![Screenshot 9](/Screenshots/Screenshot_9.png)
 
 ## Support
