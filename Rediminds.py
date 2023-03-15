@@ -24,7 +24,7 @@ class Rediminds(ScriptedLoadableModule):
     def __init__(self, parent):
         ScriptedLoadableModule.__init__(self, parent)
         # TODO: make this more human readable by adding spaces
-        self.parent.title = "Rediminds STL"
+        self.parent.title = "Rediminds"
         # TODO: set categories (folders where the module shows up in the module selector)
         self.parent.categories = ["Rediminds"]
         # TODO: add here list of module names that this module requires
@@ -422,7 +422,7 @@ class RedimindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
     def sendToBackendButton(self, segtoken):
 
         progressDialog = slicer.util.createProgressDialog(
-            parent=self.parent, value=0, maximum=100, labelText="Please wait...", windowTitle="Sending data to backend")
+            parent=self.parent, value=0, maximum=100, labelText="Please wait...", windowTitle="Syncing data with backend")
 
         # Start the progress dialog
         progressDialog.show()

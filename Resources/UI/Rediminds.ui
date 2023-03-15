@@ -55,7 +55,7 @@
    <item>
     <widget class="QPushButton" name="sendToBackendButton">
      <property name="text">
-      <string>Send STL File to Rediminds Backend</string>
+      <string>Send Modified Segments to Rediminds Backend</string>
      </property>
     </widget>
    </item>
