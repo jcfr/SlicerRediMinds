@@ -10,35 +10,35 @@ import platform
 import shutil
 
 #
-# Rediminds
+# RediMinds
 #
 
-segtoken = None
 
-
-class Rediminds(ScriptedLoadableModule):
+class RediMinds(ScriptedLoadableModule):
     """Uses ScriptedLoadableModule base class, available at:
     https://github.com/Slicer/Slicer/blob/main/Base/Python/slicer/ScriptedLoadableModule.py
     """
 
+    segtoken = None
+    nodename = None
+
     def __init__(self, parent):
         ScriptedLoadableModule.__init__(self, parent)
         # TODO: make this more human readable by adding spaces
-        self.parent.title = "Rediminds"
+        self.parent.title = "RediMinds"
         # TODO: set categories (folders where the module shows up in the module selector)
-        self.parent.categories = ["Rediminds"]
+        self.parent.categories = ["RediMinds"]
         # TODO: add here list of module names that this module requires
         self.parent.dependencies = []
         # TODO: replace with "Firstname Lastname (Organization)"
-        self.parent.contributors = [
-            "K Mordhwaj (Inzint)", "Andras Lasso (PerkLab)", "ASH"]
+        self.parent.contributors = ["K Mordhwaj (Inzint)"]
         # TODO: update with short description of the module and a link to online module documentation
         self.parent.helpText = """
-This is a scripted loadable module bundled in Rediminds extension.The purpose of this module is to process the various images and segmentations and send back to the backend server.
+This is a scripted loadable module bundled in RediMinds extension.The purpose of this module is to process the various images and segmentations and send back to the backend server.
 """
         # TODO: replace with organization, grant and thanks
         self.parent.acknowledgementText = """
-This file was developed by K Mordhwaj, Inzint on behalf of Rediminds. In first part, taken reference from LoadRemote.py file of SlicerSandbox
+This file was originally developed by K Mordhwaj, Inzint on behalf of RediMinds.
 """
 
         # Additional initialization step after application startup is complete
@@ -46,11 +46,11 @@ This file was developed by K Mordhwaj, Inzint on behalf of Rediminds. In first p
 
         # Initilize self.sampleDataLogic. At this point, Slicer modules are not initialized yet, so we cannot instantiate the logic yet.
         self.sampleDataLogic = None
+        # self.segtoken = None
 
         slicer.app.connect("urlReceived(QString)", self.onURLReceived)
 
     def onURLReceived(self, urlString):
-        global segtoken
         decodedUrlString = urllib.parse.unquote(urlString)
 
         # Split the urlString to extract segmentation and image parts
@@ -67,9 +67,8 @@ This file was developed by K Mordhwaj, Inzint on behalf of Rediminds. In first p
         segDate = segPartBackArr[3]
         segExpire = segPartBackArr[4]
         segToken = segPartBackArr[5]
-        # self.token = segToken
         segTokenMod = segToken.split('=').pop()
-        segtoken = segTokenMod
+        RediMinds.segtoken = segTokenMod
         segHeader = segPartBackArr[7]
         segGet = segPartBackArr[8]
 
@@ -82,7 +81,7 @@ This file was developed by K Mordhwaj, Inzint on behalf of Rediminds. In first p
         encodedSegPart = urllib.parse.quote(segPart)
         encodedImgPart = urllib.parse.quote(imgUrl)
 
-        mainUrl = f"slicer://viewer/?segmentation={encodedSegPart}&image={encodedImgPart}"
+        mainUrl = f"slicer://viewer/?image={encodedImgPart}&segmentation={encodedSegPart}"
 
         # Check if we understand this URL
         url = qt.QUrl(mainUrl)
@@ -141,6 +140,9 @@ This file was developed by K Mordhwaj, Inzint on behalf of Rediminds. In first p
                     nodeNames=info["nodeName"], fileNames=info["fileName"], uris=downloadUrlString, loadFileTypes=info["fileType"])
 
                 filePathBefore = slicer.app.cachePath + "/" + info["fileName"]
+
+                snode = loadedNodes[0]
+                RediMinds.nodename = snode.GetName()
 
                 os.remove(filePathBefore)
 
@@ -209,44 +211,44 @@ def registerSampleData():
     # To ensure that the source code repository remains small (can be downloaded and installed quickly)
     # it is recommended to store data sets that are larger than a few MB in a Github release.
 
-    # Rediminds1
+    # RediMinds1
     SampleData.SampleDataLogic.registerCustomSampleDataSource(
         # Category and sample name displayed in Sample Data module
-        category='Rediminds',
-        sampleName='Rediminds1',
+        category='RediMinds',
+        sampleName='RediMinds1',
         # Thumbnail should have size of approximately 260x280 pixels and stored in Resources/Icons folder.
         # It can be created by Screen Capture module, "Capture all views" option enabled, "Number of images" set to "Single".
-        thumbnailFileName=os.path.join(iconsPath, 'Rediminds1.png'),
+        thumbnailFileName=os.path.join(iconsPath, 'RediMinds1.png'),
         # Download URL and target file name
         uris="https://github.com/Slicer/SlicerTestingData/releases/download/SHA256/998cb522173839c78657f4bc0ea907cea09fd04e44601f17c82ea27927937b95",
-        fileNames='Rediminds1.nrrd',
+        fileNames='RediMinds1.nrrd',
         # Checksum to ensure file integrity. Can be computed by this command:
         #  import hashlib; print(hashlib.sha256(open(filename, "rb").read()).hexdigest())
         checksums='SHA256:998cb522173839c78657f4bc0ea907cea09fd04e44601f17c82ea27927937b95',
         # This node name will be used when the data set is loaded
-        nodeNames='Rediminds1'
+        nodeNames='RediMinds1'
     )
 
-    # Rediminds2
+    # RediMinds2
     SampleData.SampleDataLogic.registerCustomSampleDataSource(
         # Category and sample name displayed in Sample Data module
-        category='Rediminds',
-        sampleName='Rediminds2',
-        thumbnailFileName=os.path.join(iconsPath, 'Rediminds2.png'),
+        category='RediMinds',
+        sampleName='RediMinds2',
+        thumbnailFileName=os.path.join(iconsPath, 'RediMinds2.png'),
         # Download URL and target file name
         uris="https://github.com/Slicer/SlicerTestingData/releases/download/SHA256/1a64f3f422eb3d1c9b093d1a18da354b13bcf307907c66317e2463ee530b7a97",
-        fileNames='Rediminds2.nrrd',
+        fileNames='RediMinds2.nrrd',
         checksums='SHA256:1a64f3f422eb3d1c9b093d1a18da354b13bcf307907c66317e2463ee530b7a97',
         # This node name will be used when the data set is loaded
-        nodeNames='Rediminds2'
+        nodeNames='RediMinds2'
     )
 
 
 #
-# RedimindsWidget
+# RediMindsWidget
 #
 
-class RedimindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
+class RediMindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
     """Uses ScriptedLoadableModuleWidget base class, available at:
     https://github.com/Slicer/Slicer/blob/main/Base/Python/slicer/ScriptedLoadableModule.py
     """
@@ -262,7 +264,7 @@ class RedimindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         self._parameterNode = None
         self._updatingGUIFromParameterNode = False
 
-        # # # Create instance of Rediminds class
+        # # # Create instance of RediMinds class
         self.segmentationNode = None
         self.sampleDataLogic = None
 
@@ -274,7 +276,7 @@ class RedimindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
 
         # Load widget from .ui file (created by Qt Designer).
         # Additional widgets can be instantiated manually and added to self.layout.
-        uiWidget = slicer.util.loadUI(self.resourcePath('UI/Rediminds.ui'))
+        uiWidget = slicer.util.loadUI(self.resourcePath('UI/RediMinds.ui'))
         self.layout.addWidget(uiWidget)
         self.ui = slicer.util.childWidgetVariables(uiWidget)
 
@@ -285,7 +287,7 @@ class RedimindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
 
         # Create logic class. Logic implements all computations that should be possible to run
         # in batch mode, without a graphical user interface.
-        self.logic = RedimindsLogic()
+        self.logic = RediMindsLogic()
 
         # Connections
 
@@ -298,12 +300,9 @@ class RedimindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         self.ui.inputSelector.connect(
             "currentNodeChanged(vtkMRMLNode*)", self.updateParameterNodeFromGUI)
 
-        global segtoken
-        segToken = segtoken
-
         # Buttons
         self.ui.sendToBackendButton.connect(
-            'clicked(bool)', lambda: self.sendToBackendButton(segToken))
+            'clicked(bool)', self.sendToBackendButton)
 
         # Make sure parameter node is initialized (needed for module reload)
         self.initializeParameterNode()
@@ -420,16 +419,46 @@ class RedimindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
 
         self._parameterNode.EndModify(wasModified)
 
-    def sendToBackendButton(self, segtoken):
+    def sendToBackendButton(self):
+        token = RediMinds.segtoken
 
+        if token == None:
+            self.normalMessageDialog(
+                text="Sorry! can't send this file to backend server as it was not loaded from there")
+        else:
+            segmentation_nodes = slicer.mrmlScene.GetNodesByClass(
+                "vtkMRMLSegmentationNode")
+            numberNode = segmentation_nodes.GetNumberOfItems()
+
+            if numberNode > 0:
+                ourSegNodeName = RediMinds.nodename
+                for i in range(segmentation_nodes.GetNumberOfItems()):
+                    segmentation_node = segmentation_nodes.GetItemAsObject(i)
+                    if segmentation_node.GetName() == ourSegNodeName:
+                        self.sendToBackendLogic(segmentation_node)
+                        break
+                else:
+                    self.normalMessageDialog(
+                        text="It seems like the actual node is missing or probably deleted")
+            else:
+                self.normalMessageDialog(
+                    text="Sorry! All required nodes are not available")
+
+    def normalMessageDialog(self, text):
+        from qt import QMessageBox
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Information)
+        msgBox.setText(text)
+        msgBox.setWindowTitle("Error")
+        msgBox.setStandardButtons(QMessageBox.Ok)
+        msgBox.exec_()
+
+    def sendToBackendLogic(self, segmentation_node):
         progressDialog = slicer.util.createProgressDialog(
             parent=self.parent, value=0, maximum=100, labelText="Please wait...", windowTitle="Syncing data with backend")
 
         # Start the progress dialog
         progressDialog.show()
-
-        self.segmentationNode = slicer.mrmlScene.GetNodeByID(
-            "vtkMRMLSegmentationNode1")
 
         # Create a folder in the user's home directory if it doesn't exist
         if platform.system() == 'Windows':
@@ -438,6 +467,7 @@ class RedimindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         else:
             folderPath = os.path.join(
                 os.path.expanduser('~'), 'SlicerSTL')
+
         if not os.path.exists(folderPath):
             os.makedirs(folderPath)
 
@@ -446,11 +476,11 @@ class RedimindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
 
         # export all segments to STL files
         slicer.modules.segmentations.logic().ExportSegmentsClosedSurfaceRepresentationToFiles(
-            destinationFolder, self.segmentationNode)
+            destinationFolder, segmentation_node)
 
         zipFileToS3 = shutil.make_archive(
             destinationFolder, 'zip', destinationFolder)
-        name = self.segmentationNode.GetName()
+        name = segmentation_node.GetName()
         nameString = str(name)
         fileKey = nameString[:-4]
         fileKeyZip = fileKey + ".zip"
@@ -458,12 +488,10 @@ class RedimindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         # Generate a presigned S3 POST URL
         object_name = fileKeyZip
         bucket_name = 'gtf-development-slicer-output'
-        fields = {"key": object_name}
-        conditions = [{"acl": "private"}]
-        token = segtoken
+        # fields = {"key": object_name}
+        # conditions = [{"acl": "private"}]
 
-        response = self.create_presigned_post(
-            bucket_name, object_name)
+        response = self.create_presigned_post(bucket_name, object_name)
         if response is None:
             exit(1)
 
@@ -480,7 +508,7 @@ class RedimindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         with open(zipFileToS3, 'rb') as f:
             files = {'file': (zipFileToS3, f)}
             # Add custom header to the POST request
-            headers = {'x-amz-meta-token': token}
+            # headers = {'x-amz-meta-token': token}
             http_response = requests.post(
                 response['url'], data=response['fields'], files=files
                 # , headers=headers
@@ -527,11 +555,11 @@ class RedimindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         return response
 
 #
-# RedimindsLogic
+# RediMindsLogic
 #
 
 
-class RedimindsLogic(ScriptedLoadableModuleLogic):
+class RediMindsLogic(ScriptedLoadableModuleLogic):
     """This class should implement all the actual
     computation done by your module.  The interface
     should be such that other python code can import
@@ -592,10 +620,10 @@ class RedimindsLogic(ScriptedLoadableModuleLogic):
 
 
 #
-# RedimindsTest
+# RediMindsTest
 #
 
-class RedimindsTest(ScriptedLoadableModuleTest):
+class RediMindsTest(ScriptedLoadableModuleTest):
     """
     This is the test case for your scripted module.
     Uses ScriptedLoadableModuleTest base class, available at:
@@ -611,9 +639,9 @@ class RedimindsTest(ScriptedLoadableModuleTest):
         """Run as few or as many tests as needed here.
         """
         self.setUp()
-        self.test_Rediminds1()
+        self.test_RediMinds1()
 
-    def test_Rediminds1(self):
+    def test_RediMinds1(self):
         """ Ideally you should have several levels of tests.  At the lowest level
         tests should exercise the functionality of the logic with different inputs
         (both valid and invalid).  At higher levels your tests should emulate the
@@ -631,7 +659,7 @@ class RedimindsTest(ScriptedLoadableModuleTest):
 
         import SampleData
         registerSampleData()
-        inputVolume = SampleData.downloadSample('Rediminds1')
+        inputVolume = SampleData.downloadSample('RediMinds1')
         self.delayDisplay('Loaded test data set')
 
         inputScalarRange = inputVolume.GetImageData().GetScalarRange()
@@ -644,7 +672,7 @@ class RedimindsTest(ScriptedLoadableModuleTest):
 
         # Test the module logic
 
-        logic = RedimindsLogic()
+        logic = RediMindsLogic()
 
         # Test algorithm with non-inverted threshold
         logic.process(inputVolume, outputVolume, threshold, True)

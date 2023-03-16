@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Rediminds</class>
- <widget class="qMRMLWidget" name="Rediminds">
+ <class>RediMinds</class>
+ <widget class="qMRMLWidget" name="RediMinds">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -55,7 +55,7 @@
    <item>
     <widget class="QPushButton" name="sendToBackendButton">
      <property name="text">
-      <string>Send Modified Segments to Rediminds Backend</string>
+      <string>Send Modified Segments to RediMinds Backend</string>
      </property>
     </widget>
    </item>
@@ -101,7 +101,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>Rediminds</sender>
+   <sender>RediMinds</sender>
    <signal>mrmlSceneChanged(vtkMRMLScene*)</signal>
    <receiver>inputSelector</receiver>
    <slot>setMRMLScene(vtkMRMLScene*)</slot>
@@ -117,7 +117,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>Rediminds</sender>
+   <sender>RediMinds</sender>
    <signal>mrmlSceneChanged(vtkMRMLScene*)</signal>
    <receiver>outputSelector</receiver>
    <slot>setMRMLScene(vtkMRMLScene*)</slot>
@@ -133,7 +133,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>Rediminds</sender>
+   <sender>RediMinds</sender>
    <signal>mrmlSceneChanged(vtkMRMLScene*)</signal>
    <receiver>invertedOutputSelector</receiver>
    <slot>setMRMLScene(vtkMRMLScene*)</slot>
