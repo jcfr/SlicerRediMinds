@@ -1,16 +1,20 @@
 # SlicerRediMinds
 
-SlicerRediMinds is a custom extension developed by RediMinds for their web app https://dev.groundtruthfactory.com. This extension enables the user to load original CT scans and segmented files into Slicer using a URL, and then use the Segment Editor module to label or polish the segments of an organ. The RediMinds module, installed from the marketplace, can be used to send the segmented files to the RediMinds backend for further processing.
+SlicerRediMinds is a custom extension developed by RediMinds for their web app https://dev.groundtruthfactory.com This extension enables the user to load original CT scans and segmented files into Slicer using a URL, and then use the Segment Editor module to label or polish the segments of an organ. The RediMinds module, installed from the marketplace, can be used to send the segmented files to the RediMinds backend for further processing.
+
+## Prerequisite
+
+1. Should have 3D Slicer installed on your system. If it's not installed, you can download and install from here: https://www.slicer.org/
+2. Should have installed `RediMinds` extension. If You have not installed, You can go to `Extensions Manager`, then Click `Install Extensions` then search `RediMinds` and then install.
 
 ## Usage
 
 To use SlicerRediMinds, follow these steps:
 
-1. Install the RediMinds extension from the marketplace.
-2. Click the button on dev.groundtruthfactory.com to open Slicer and load the original CT scan and segmented file using the URL.
-3. Use the Segment Editor module to label or polish the segments of an organ.
-4. Switch to the RediMinds module and click "Send Modified Segments to RediMinds Backend" to capture the current state of polished segmentation.
-5. The polished segmented files will be sent back to the RediMinds web server for further processing.
+1. Click the button `View In Slicer` on https://dev.groundtruthfactory.com to open Slicer and load the original CT scan and segmented file using the URL.
+2. Use the `Segment Editor` module to label or polish the segments of an organ.
+3. Switch to the `RediMinds` module and click `Send Modified Segments to RediMinds Backend` to capture the current state of polished segmentation.
+4. The polished segmented files will be sent back to the RediMinds web server for further processing.
 
 ## Screenshots
 
