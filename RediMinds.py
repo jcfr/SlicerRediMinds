@@ -439,7 +439,7 @@ class RediMindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
                         break
                 else:
                     self.normalMessageDialog(
-                        text="It seems like the actual node is missing or probably deleted")
+                        text="It seems like the actual node is missing, renamed or probably deleted")
             else:
                 self.normalMessageDialog(
                     text="Sorry! All required nodes are not available")
