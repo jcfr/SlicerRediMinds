@@ -6,7 +6,7 @@
 
 # This is source code manager (i.e. svn)
 scm git
-scmurl https://github.com/RediMinds/SlicerRediMinds.git
+scmurl https://github.com/Rediminds/SlicerRediMinds.git
 scmrevision main
 
 # list dependencies

@@ -1,6 +1,6 @@
 # SlicerRediMinds
 
-SlicerRediMinds is a custom extension developed by RediMinds for their web app https://dev.groundtruthfactory.com This extension enables the user to load original CT scans and segmented files into Slicer using a URL, and then use the Segment Editor module to label or polish the segments of an organ. The RediMinds module, installed from the marketplace, can be used to send the segmented files to the RediMinds backend for further processing.
+SlicerRediMinds is a custom extension developed by [RediMinds](https://rediminds.com/) for their web app https://dev.groundtruthfactory.com for purpose of [medical expertise to label large quantities of surgical images](https://rediminds.com/case_studies/a-secure-collaborative-platform-to-create-the-future-of-intelligent-surgical-tools/). This extension enables the user to load original CT scans and segmented files into Slicer using a URL, and then use the Segment Editor module to label or polish the segments of an organ. The RediMinds module, installed from the marketplace, can be used to send the segmented files to the RediMinds backend for further processing and converting to a 3D-Model for accurate visualization of the organs(even with VR) to understand the problems better.
 
 ## Prerequisite
 

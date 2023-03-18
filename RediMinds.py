@@ -420,29 +420,28 @@ class RediMindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         self._parameterNode.EndModify(wasModified)
 
     def sendToBackendButton(self):
-        token = RediMinds.segtoken
-
-        if token == None:
-            self.normalMessageDialog(
-                text="Sorry! can't send this file to backend server as it was not loaded from there")
-        else:
-            segmentation_nodes = slicer.mrmlScene.GetNodesByClass(
-                "vtkMRMLSegmentationNode")
-            numberNode = segmentation_nodes.GetNumberOfItems()
-
-            if numberNode > 0:
-                ourSegNodeName = RediMinds.nodename
-                for i in range(segmentation_nodes.GetNumberOfItems()):
-                    segmentation_node = segmentation_nodes.GetItemAsObject(i)
-                    if segmentation_node.GetName() == ourSegNodeName:
-                        self.sendToBackendLogic(segmentation_node)
-                        break
-                else:
-                    self.normalMessageDialog(
-                        text="It seems like the actual node is missing, renamed or probably deleted")
-            else:
+        segmentation_nodes = slicer.mrmlScene.GetNodesByClass(
+            "vtkMRMLSegmentationNode")
+        numberNode = segmentation_nodes.GetNumberOfItems()
+        if numberNode > 0:
+            token = RediMinds.segtoken
+            if token == None:
                 self.normalMessageDialog(
-                    text="Sorry! All required nodes are not available")
+                    text="Sorry! can't send this file to backend server as it was not loaded from there")
+            else:
+                segmentation_node = slicer.util.getNode(RediMinds.nodename)
+
+                # Check if the node is a segmentation node
+                if segmentation_node is not None and segmentation_node.IsA("vtkMRMLSegmentationNode"):
+                    # This is a segmentation node
+                    self.sendToBackendLogic(segmentation_node)
+                else:
+                    # This is not a segmentation node
+                    self.normalMessageDialog(
+                        text="It seems like the actual segmentation node is missing, renamed or probably deleted")
+        else:
+            self.normalMessageDialog(
+                text="Sorry! Atleast one segmentation node required.")
 
     def normalMessageDialog(self, text):
         from qt import QMessageBox
@@ -468,7 +467,11 @@ class RediMindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
             folderPath = os.path.join(
                 os.path.expanduser('~'), 'SlicerSTL')
 
-        if not os.path.exists(folderPath):
+        if os.path.exists(folderPath):
+            # in case if our process failed then remove any residuals
+            shutil.rmtree(folderPath)
+            os.makedirs(folderPath)
+        else:
             os.makedirs(folderPath)
 
         # set the destination folder to the newly created folder
