@@ -27,11 +27,12 @@ class RediMinds(ScriptedLoadableModule):
         # TODO: make this more human readable by adding spaces
         self.parent.title = "RediMinds"
         # TODO: set categories (folders where the module shows up in the module selector)
-        self.parent.categories = ["RediMinds"]
+        self.parent.categories = ["Segmentation"]
         # TODO: add here list of module names that this module requires
         self.parent.dependencies = []
         # TODO: replace with "Firstname Lastname (Organization)"
-        self.parent.contributors = ["K Mordhwaj (Inzint)"]
+        self.parent.contributors = [
+            "K Mordhwaj (Inzint), Andras Lasso (PerkLab) and ASH"]
         # TODO: update with short description of the module and a link to online module documentation
         self.parent.helpText = """
 This is a scripted loadable module bundled in RediMinds extension.The purpose of this module is to process the various images and segmentations and send back to the backend server.
