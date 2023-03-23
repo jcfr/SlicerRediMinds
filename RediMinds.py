@@ -530,6 +530,15 @@ class RediMindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         finally:
             self.progressWindow.close()
 
+    def normalMessageDialog(self, text):
+        from qt import QMessageBox
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Information)
+        msgBox.setText(text)
+        msgBox.setWindowTitle("Error")
+        msgBox.setStandardButtons(QMessageBox.Ok)
+        msgBox.exec_()
+
     def create_presigned_post(self, bucket_name, object_name):
         # Generate a presigned S3 POST URL
         needToInstallBoto3 = False
