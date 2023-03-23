@@ -8,6 +8,7 @@ from slicer.ScriptedLoadableModule import *
 from slicer.util import VTKObservationMixin
 import platform
 import shutil
+import time
 
 #
 # RediMinds
@@ -444,88 +445,90 @@ class RediMindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
             self.normalMessageDialog(
                 text="Sorry! Atleast one segmentation node required.")
 
-    def normalMessageDialog(self, text):
-        from qt import QMessageBox
-        msgBox = QMessageBox()
-        msgBox.setIcon(QMessageBox.Information)
-        msgBox.setText(text)
-        msgBox.setWindowTitle("Error")
-        msgBox.setStandardButtons(QMessageBox.Ok)
-        msgBox.exec_()
-
     def sendToBackendLogic(self, segmentation_node):
-        progressDialog = slicer.util.createProgressDialog(
-            parent=self.parent, value=0, maximum=100, labelText="Please wait...", windowTitle="Syncing data with backend")
-
-        # Start the progress dialog
-        progressDialog.show()
-
-        # Create a folder in the user's home directory if it doesn't exist
-        if platform.system() == 'Windows':
-            folderPath = os.path.join(
-                os.environ['USERPROFILE'], 'SlicerSTL')
-        else:
-            folderPath = os.path.join(
-                os.path.expanduser('~'), 'SlicerSTL')
-
-        if os.path.exists(folderPath):
-            # in case if our process failed then remove any residuals
-            shutil.rmtree(folderPath)
-            os.makedirs(folderPath)
-        else:
-            os.makedirs(folderPath)
-
-        # set the destination folder to the newly created folder
-        destinationFolder = folderPath
-
-        # export all segments to STL files
-        slicer.modules.segmentations.logic().ExportSegmentsClosedSurfaceRepresentationToFiles(
-            destinationFolder, segmentation_node)
-
-        zipFileToS3 = shutil.make_archive(
-            destinationFolder, 'zip', destinationFolder)
-        name = segmentation_node.GetName()
-        nameString = str(name)
-        fileKey = nameString[:-4]
-        fileKeyZip = fileKey + ".zip"
-
-        # Generate a presigned S3 POST URL
-        object_name = fileKeyZip
-        bucket_name = 'gtf-development-slicer-output'
-        # fields = {"key": object_name}
-        # conditions = [{"acl": "private"}]
-
-        response = self.create_presigned_post(bucket_name, object_name)
-        if response is None:
-            exit(1)
-
-        needToInstallRequest = False
         try:
-            import requests
-        except ModuleNotFoundError as e:
-            needToInstallRequest = True
+            self.progressWindow = slicer.util.createProgressDialog(
+                parent=self.parent,  windowTitle="Syncing data with backend")
 
-        if needToInstallRequest:
-            slicer.util.pip_install("requests")
+            # progress upto 25%
+            self.reportProgress(rangeStart=0, rangeEnd=25)
 
-        # Upload file to S3 using the presigned URL and custom header
-        with open(zipFileToS3, 'rb') as f:
-            files = {'file': (zipFileToS3, f)}
-            # Add custom header to the POST request
-            # headers = {'x-amz-meta-token': token}
-            http_response = requests.post(
-                response['url'], data=response['fields'], files=files
-                # , headers=headers
-            )
+            # Create a folder in the user's home directory if it doesn't exist
+            if platform.system() == 'Windows':
+                folderPath = os.path.join(
+                    os.environ['USERPROFILE'], 'SlicerSTL')
+            else:
+                folderPath = os.path.join(
+                    os.path.expanduser('~'), 'SlicerSTL')
 
-        # If successful, returns HTTP status code 204
-        logging.info(
-            f'File upload HTTP status code: {http_response.status_code}')
+            if os.path.exists(folderPath):
+                # in case if our process failed then remove any residuals
+                shutil.rmtree(folderPath)
+                os.makedirs(folderPath)
+            else:
+                os.makedirs(folderPath)
 
-        shutil.rmtree(destinationFolder)
-        os.remove(zipFileToS3)
+            # set the destination folder to the newly created folder
+            destinationFolder = folderPath
 
-        progressDialog.close()
+            # export all segments to STL files
+            slicer.modules.segmentations.logic().ExportSegmentsClosedSurfaceRepresentationToFiles(
+                destinationFolder, segmentation_node)
+
+            # progress upto 50%
+            self.reportProgress(rangeStart=25, rangeEnd=50)
+
+            zipFileToS3 = shutil.make_archive(
+                destinationFolder, 'zip', destinationFolder)
+            name = segmentation_node.GetName()
+            nameString = str(name)
+            fileKey = nameString[:-4]
+            fileKeyZip = fileKey + ".zip"
+
+            # Generate a presigned S3 POST URL
+            object_name = fileKeyZip
+            bucket_name = 'gtf-development-slicer-output'
+            # fields = {"key": object_name}
+            # conditions = [{"acl": "private"}]
+
+            response = self.create_presigned_post(bucket_name, object_name)
+            if response is None:
+                exit(1)
+
+            # progress upto 75%
+            self.reportProgress(rangeStart=50, rangeEnd=75)
+
+            needToInstallRequest = False
+            try:
+                import requests
+            except ModuleNotFoundError as e:
+                needToInstallRequest = True
+
+            if needToInstallRequest:
+                slicer.util.pip_install("requests")
+
+            # Upload file to S3 using the presigned URL and custom header
+            with open(zipFileToS3, 'rb') as f:
+                files = {'file': (zipFileToS3, f)}
+                # Add custom header to the POST request
+                # headers = {'x-amz-meta-token': token}
+                http_response = requests.post(
+                    response['url'], data=response['fields'], files=files
+                    # , headers=headers
+                )
+
+            # If successful, returns HTTP status code 204
+            logging.info(
+                f'File upload HTTP status code: {http_response.status_code}')
+
+            shutil.rmtree(destinationFolder)
+
+            # progress upto 100%
+            self.reportProgress(rangeStart=75, rangeEnd=100)
+
+            os.remove(zipFileToS3)
+        finally:
+            self.progressWindow.close()
 
     def create_presigned_post(self, bucket_name, object_name):
         # Generate a presigned S3 POST URL
@@ -557,6 +560,33 @@ class RediMindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
 
         # The response contains the presigned URL and required fields
         return response
+
+    def reportProgress(self, rangeStart, rangeEnd):
+        progress = self.progressValue(rangeStart, rangeEnd)
+        self.progressBarFunction(progress)
+
+    def progressValue(self, rangeStart, rangeEnd):
+        elapsedTime = 0
+        # time for each interval
+        intervalTime = 0.20
+
+        for i in range(rangeStart, rangeEnd):
+            time.sleep(intervalTime)
+            elapsedTime += intervalTime
+            # progress as a percentage
+            logging.info(f"progress time --> {i}")
+            yield i
+
+    def progressBarFunction(self, progress):
+        if self.progressWindow.wasCanceled:
+            raise Exception("upload aborted")
+        for p in progress:
+            self.progressWindow.show()
+            self.progressWindow.activateWindow()
+            self.progressWindow.setLabelText("Uploading...")
+            self.progressWindow.setValue(p)
+            # Process events to allow screen to refresh
+            slicer.app.processEvents()
 
 #
 # RediMindsLogic
@@ -602,7 +632,6 @@ class RediMindsLogic(ScriptedLoadableModuleLogic):
         if not inputVolume or not outputVolume:
             raise ValueError("Input or output volume is invalid")
 
-        import time
         startTime = time.time()
         logging.info('Processing started')
 
