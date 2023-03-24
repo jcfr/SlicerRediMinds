@@ -445,6 +445,15 @@ class RediMindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
             self.normalMessageDialog(
                 text="Sorry! Atleast one segmentation node required.")
 
+    def normalMessageDialog(self, text):
+        from qt import QMessageBox
+        msgBox = QMessageBox()
+        msgBox.setIcon(QMessageBox.Information)
+        msgBox.setText(text)
+        msgBox.setWindowTitle("Error")
+        msgBox.setStandardButtons(QMessageBox.Ok)
+        msgBox.exec_()
+
     def sendToBackendLogic(self, segmentation_node):
         try:
             self.progressWindow = slicer.util.createProgressDialog(
@@ -488,9 +497,6 @@ class RediMindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
             # Generate a presigned S3 POST URL
             object_name = fileKeyZip
             bucket_name = 'gtf-development-slicer-output'
-            # fields = {"key": object_name}
-            # conditions = [{"acl": "private"}]
-
             response = self.create_presigned_post(bucket_name, object_name)
             if response is None:
                 exit(1)
@@ -510,11 +516,8 @@ class RediMindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
             # Upload file to S3 using the presigned URL and custom header
             with open(zipFileToS3, 'rb') as f:
                 files = {'file': (zipFileToS3, f)}
-                # Add custom header to the POST request
-                # headers = {'x-amz-meta-token': token}
                 http_response = requests.post(
                     response['url'], data=response['fields'], files=files
-                    # , headers=headers
                 )
 
             # If successful, returns HTTP status code 204
@@ -530,17 +533,7 @@ class RediMindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         finally:
             self.progressWindow.close()
 
-    def normalMessageDialog(self, text):
-        from qt import QMessageBox
-        msgBox = QMessageBox()
-        msgBox.setIcon(QMessageBox.Information)
-        msgBox.setText(text)
-        msgBox.setWindowTitle("Error")
-        msgBox.setStandardButtons(QMessageBox.Ok)
-        msgBox.exec_()
-
     def create_presigned_post(self, bucket_name, object_name):
-        # Generate a presigned S3 POST URL
         needToInstallBoto3 = False
         try:
             import boto3
@@ -555,13 +548,8 @@ class RediMindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         from botocore.exceptions import ClientError
 
         try:
-            # Add custom header to the conditions list
-            # conditions = conditions or []
-            # conditions.append({"x-amz-meta-token": token})
             response = s3_client.generate_presigned_post(bucket_name,
                                                          object_name,
-                                                         # Fields=fields,
-                                                         # Conditions=conditions,
                                                          ExpiresIn=3600)
         except ClientError as e:
             logging.error(e)
@@ -582,13 +570,14 @@ class RediMindsWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         for i in range(rangeStart, rangeEnd):
             time.sleep(intervalTime)
             elapsedTime += intervalTime
-            # progress as a percentage
-            logging.info(f"progress time --> {i}")
             yield i
 
     def progressBarFunction(self, progress):
+        # Abort download if cancel is clicked in progress window
         if self.progressWindow.wasCanceled:
             raise Exception("upload aborted")
+
+        # send progress bar values
         for p in progress:
             self.progressWindow.show()
             self.progressWindow.activateWindow()
